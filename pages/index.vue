@@ -6,7 +6,5 @@
 </template>
 
 <script setup lang="ts">
-const { data: helloMessage, pending, error } = await useFetch<string>('/', {
-  baseURL: 'http://localhost:3001',
-});
+const { data: helloMessage, pending, error } = await useMyFetch<string>('/');
 </script>
