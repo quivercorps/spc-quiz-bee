@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionType } from '~/types/enum';
-import type { QuizQuestion } from '~/types/interface';
+import { QuestionType } from '~/types/enum'
+import type { QuizQuestion } from '~/types/quiz.interface';
 
 const quizQuestions = ref<QuizQuestion[]>([
     {
@@ -23,7 +23,7 @@ const quizQuestions = ref<QuizQuestion[]>([
         text: 'What is your favorite color?',
         choices: ['red', 'blue'],
     }
-]);
+])
 </script>
 
 <style>
