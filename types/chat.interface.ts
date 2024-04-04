@@ -3,12 +3,11 @@ export interface User {
     userName: string;
     socketId: string;
 }
-
 export interface Lobby {
-    lobbyId: string;
+    lobbyId?: string;
     name: string;
     host: User;
-    lobbyCode: string;
+    inviteCode?: string;
     users: User[];
 }
 
@@ -17,6 +16,7 @@ export interface Message {
     timeSent: string;
     message: string;
     lobbyId: string;
+    lobbyName?: string;
 }
 
 export interface ServerToClientEvents {

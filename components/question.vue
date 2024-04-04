@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { QuestionType } from '~/types/enum';
-import type { QuizQuestion } from '~/types/interface';
+import type { QuizQuestion } from '~/types/quiz.interface';
 
 const props = defineProps<{ question: QuizQuestion }>();
 const { question } = toRefs(reactive({
