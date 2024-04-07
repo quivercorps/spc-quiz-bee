@@ -6,7 +6,7 @@
             :isLoading="isLoading"
             @select-lobby="joinLobbySelection = $event"
         ></LobbySelector>
-        <LoginForm class="flex-1" :defaultUser="user.userName" :disableNewLobby="joinLobbySelection !== ''" @login="login"></LoginForm>
+        <LoginForm class="flex-1" :defaultPlayer="player.playerName" :disableNewLobby="joinLobbySelection !== ''" @login="login"></LoginForm>
     </div>
     <UButton @click="createLobby">Create Lobby</UButton>
 </template>
@@ -17,7 +17,7 @@ import type { Lobby } from '~/types/chat.interface'
 const { $api } = useNuxtApp()
 
 const { socket } = useSocket()
-const user = getUser()
+const player = getPlayer()
 const currentLobby = useCookie<string>('lobby')
 
 const joinLobbySelection = ref('')
@@ -46,23 +46,23 @@ onUnmounted(() => {
 })
 
 const createLobby = async () => {
-    const newUser = {
-        userId: generateUserId('Admin'),
-        userName: 'Admin'
+    const newPlayer = {
+        playerId: generatePlayerId('Admin'),
+        playerName: 'Admin'
     }
-    setUser({id: newUser.userId, name: newUser.userName})
+    setPlayer({id: newPlayer.playerId, name: newPlayer.playerName})
 
-    const inviteCode = await $api<string>('generate_invite')
+    const inviteCode = await $api<string>('lobby/generate_invite')
     await navigateTo(`/lobby/${inviteCode}`)
 }
 
-const login = async ({ userName, inviteCode }: { userName: string; inviteCode: string }) => {
-    const newUser = {
-        userId: generateUserId(userName),
-        userName: userName
+const login = async ({ playerName, inviteCode }: { playerName: string; inviteCode: string }) => {
+    const newPlayer = {
+        playerId: generatePlayerId(playerName),
+        playerName: playerName
     }
 
-    setUser({id: newUser.userId, name: newUser.userName})
+    setPlayer({id: newPlayer.playerId, name: newPlayer.playerName})
 
     const lobby = inviteCode
     currentLobby.value = lobby
@@ -71,7 +71,7 @@ const login = async ({ userName, inviteCode }: { userName: string; inviteCode: s
 }
 
 // watchEffect(() => {
-//     if (user?.userId && currentLobby.value) {
+//     if (player?.playerId && currentLobby.value) {
 //         navigateTo(`/lobby/${currentLobby.value}`)
 //     }
 // })

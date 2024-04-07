@@ -1,18 +1,18 @@
-export interface User {
-    userId: string;
-    userName: string;
+export interface Player {
+    playerId: string;
+    playerName: string;
     socketId: string;
 }
 export interface Lobby {
     lobbyId?: string;
     name: string;
-    host: User;
+    host: Player;
     inviteCode?: string;
-    users: User[];
+    players: Player[];
 }
 
 export interface Message {
-    user: User;
+    player: Player;
     timeSent: string;
     message: string;
     lobbyId: string;
@@ -25,5 +25,5 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
     chat: (e: Message) => void
-    join_room: (e: {user: User; lobbyId: string }) => void
+    join_room: (e: {player: Player; lobbyId: string }) => void
 }

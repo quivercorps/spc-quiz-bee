@@ -6,8 +6,8 @@
         not connected
     </p>
     <p>{{ props.lobbyName }}</p>
-    <UButton @click="$emit('handle-users-click')">
-        {{ props.users.length }}
+    <UButton @click="$emit('handle-players-click')">
+        {{ props.players.length }}
     </UButton>
     <UButton @click="$emit('handle-leave-lobby')">
         leave
@@ -15,15 +15,15 @@
 </template>
 
 <script setup lang="ts">
-import type { User } from '~/types/chat.interface';
+import type { Player } from '~/types/chat.interface';
 
 const props = defineProps({
     isConnected: {
         type: Boolean,
         required: true
     },
-    users: {
-        type: Array as PropType<User[]>,
+    players: {
+        type: Array as PropType<Player[]>,
         required: true
     },
     lobbyName: {
@@ -32,5 +32,5 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['handle-users-click', 'handle-leave-lobby'])
+const emit = defineEmits(['handle-players-click', 'handle-leave-lobby'])
 </script>
