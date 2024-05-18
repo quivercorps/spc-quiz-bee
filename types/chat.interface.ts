@@ -1,7 +1,17 @@
+export interface User {
+    email: string;
+    id: string;
+    userName: string;
+}
+
 export interface Player {
     playerId: string;
     playerName: string;
     socketId: string;
+}
+export interface PlayerCookie {
+    playerId: string;
+    playerName: string;
 }
 export interface Lobby {
     lobbyId?: string;
@@ -16,7 +26,6 @@ export interface Message {
     timeSent: string;
     message: string;
     lobbyId: string;
-    lobbyName?: string;
 }
 
 export interface ServerToClientEvents {

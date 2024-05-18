@@ -10,4 +10,8 @@ export default defineNuxtConfig({
       baseURL: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/'
     }
   },
+  colorMode: {
+    preference: 'light',
+    classSuffix: ''
+  }
 })
