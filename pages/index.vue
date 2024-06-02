@@ -1,9 +1,10 @@
 <template>
     <div>
-        LOGIN FORM
-        <UButton v-if="session" @click="getProfile">get profile</UButton>
+        <UButton v-if="session" @click="goToQuizzes">My Quizzes</UButton>
+        <UButton v-if="session" @click="getProfile">go to profile</UButton>
         <UButton v-if="session" @click="logout">logout</UButton>
         <div v-if="!session">
+            LOGIN FORM
             <UForm :state="loginState" @submit="loginUser">
                 <UFormGroup label="Name" name="userName">
                     <UInput v-model="loginState.email"></UInput>
@@ -125,6 +126,10 @@ const login = async ({ playerName, inviteCode }: { playerName: string; inviteCod
     currentLobby.value = lobby
 
     await navigateTo(`/lobby/${lobby}`)
+}
+
+const goToQuizzes = async () => {
+    await navigateTo(`/quiz/list`)
 }
 
 // watchEffect(() => {
