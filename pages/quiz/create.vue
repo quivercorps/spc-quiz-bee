@@ -10,18 +10,24 @@
 
 <script setup lang="ts">
 import { QuestionType } from '~/types/enum'
-import type { QuizQuestion } from '~/types/quiz.interface';
+import type { Question } from '~/types/quiz.interface';
 
-const quizQuestions = ref<QuizQuestion[]>([
+const quizQuestions = ref<Question[]>([
     {
         type: QuestionType.MultipleChoice,
         text: 'What is your favorite color?',
         choices: ['red', 'blue'],
+        _id: '',
+        category: '',
+        timer: 0
     },
     {
         type: QuestionType.MultipleChoice,
         text: 'What is your favorite color?',
         choices: ['red', 'blue'],
+        _id: '',
+        category: '',
+        timer: 0
     }
 ])
 </script>

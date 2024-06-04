@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <!-- <div>
         <UButton v-if="session" @click="goToQuizzes">My Quizzes</UButton>
         <UButton v-if="session" @click="getProfile">go to profile</UButton>
         <UButton v-if="session" @click="logout">logout</UButton>
@@ -27,7 +27,15 @@
         ></LobbySelector>
         <LoginForm class="flex-1" :defaultPlayer="player.playerName" :disableNewLobby="joinLobbySelection !== ''" @login="login"></LoginForm>
     </div>
-    <UButton v-if="session" @click="createLobby">Create Lobby</UButton>
+    <UButton v-if="session" @click="createLobby">Create Lobby</UButton> -->
+    <div class="flex h-screen">
+        <div class="m-auto">
+            <JoinForm 
+                @join="join">
+
+            </JoinForm>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -82,26 +90,26 @@ const getProfile = async () => {
     }
 }
 
-onMounted(() => {
-    socket.connect()
+// onMounted(() => {
+//     socket.connect()
     
-    isLoading.value = true
+//     isLoading.value = true
 
-    socket.on('lobbies_updated', (updatedLobbies: Lobby[]) => {
-        isLoading.value = true
-        lobbies.value = updatedLobbies
-        isLoading.value = false
-    })
+//     socket.on('lobbies_updated', (updatedLobbies: Lobby[]) => {
+//         isLoading.value = true
+//         lobbies.value = updatedLobbies
+//         isLoading.value = false
+//     })
 
-    socket.emit('get_lobbies')
-})
+//     socket.emit('get_lobbies')
+// })
 
-onUnmounted(() => {
-    socket.disconnect()
-    socket.off('connect')
-    socket.off('disconnect')
-    socket.off('lobbies_updated')
-})
+// onUnmounted(() => {
+//     socket.disconnect()
+//     socket.off('connect')
+//     socket.off('disconnect')
+//     socket.off('lobbies_updated')
+// })
 
 const createLobby = async () => {
     const newPlayer = {
@@ -114,7 +122,7 @@ const createLobby = async () => {
     await navigateTo(`/lobby/${inviteCode}`)
 }
 
-const login = async ({ playerName, inviteCode }: { playerName: string; inviteCode: string }) => {
+const join = async ({ playerName, inviteCode }: { playerName: string; inviteCode: string }) => {
     const newPlayer = {
         playerId: generatePlayerId(playerName),
         playerName: playerName
