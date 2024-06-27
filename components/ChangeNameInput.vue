@@ -1,5 +1,5 @@
 <template>
-    <UInput @change="changeName" size="lg" :variant="variant" v-model="name" :placeholder="placeholder" />
+    <UInput @change="changeName" size="lg" :variant="variant" v-model="editableName" :placeholder="placeholder" />
 </template>
 
 <script setup lang="ts">
@@ -23,16 +23,24 @@ const props = defineProps({
     }
 })
 
-const name = ref(props.name)
+const { name } = toRefs(props)
 
-const emit = defineEmits(['change-category-name', 'change-category-name-update'])
+// Create a writable ref for name
+const editableName = ref(name.value)
+
+// Watch for changes to synchronize
+watch(name, (newName) => {
+    editableName.value = newName
+})
+
+const emit = defineEmits(['change-category-name'])
 
 function changeName() {
-    if (!name.value) { 
-        name.value = props.name
+    if (!editableName.value) {
+        editableName.value = name.value
         return
     }
 
-    emit('change-category-name', name.value, props.index)
+    emit('change-category-name', editableName.value, props.index)
 }
 </script>

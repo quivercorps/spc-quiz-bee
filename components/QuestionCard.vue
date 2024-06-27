@@ -59,12 +59,11 @@ function deleteChoice(choice: Choice, index: number) {
   
   const newChoices = question.value.choices?.filter(item => item._id !== choice._id)
 
-  let idOfNextChoice = choice._id
+  let idOfNextChoice = selectedChoice.value
   
-  if (selectedChoice.value === choice._id) {
+  if (selectedChoice.value == choice._id) {
     if (index === 0) {
       idOfNextChoice = question.value.choices![1]._id!
-
     } else {
       idOfNextChoice = question.value.choices![index! - 1]._id!
     }

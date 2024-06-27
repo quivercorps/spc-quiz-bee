@@ -20,7 +20,11 @@
                 <div class="flex justify-between items-center">
                     <p>{{ quiz.name }}</p>
 
-                    <UButton @click="deleteQuiz(quiz._id)" color="red" variant="ghost" icon="i-heroicons-trash" trailing>Delete Quiz</UButton>
+                    <div class="flex gap-2">
+                        <UButton @click="deleteQuiz(quiz._id)" color="red" variant="ghost" icon="i-heroicons-trash" trailing>Delete Quiz</UButton>
+                        <UButton @click="navigateToQuiz(quiz._id)" color="blue" variant="ghost" icon="i-heroicons-pencil-square" trailing>Edit</UButton>
+                    </div>
+                    
                 </div>
             </template>
             <div class="flex justify-between items-center">
@@ -28,7 +32,7 @@
                     <p>Categories: {{ quiz.categories?.length || 0 }}</p>
                     <p>Questions: {{ quiz.questions?.length || 0 }}</p>
                 </div>
-                <UButton size="xl" @click="navigateToQuiz(quiz._id)" icon="i-heroicons-pencil-square" trailing>Edit</UButton>
+                <UButton size="xl" icon="i-heroicons-puzzle-piece" trailing :disabled="haveQuestions(quiz.questions!.length)">Start Quiz</UButton>
             </div>
         </UCard>
     </div>
@@ -80,15 +84,19 @@ const createQuiz = async() => {
 
 const deleteQuiz = async (quizId: string) => {
 
-    await $api('quiz/delete', {
-        method: 'DELETE',
-        headers: {
-            Authorization: `Bearer ${session!}`
-        },
-        body: {quizId}
-    })
+    if (window.confirm("Are you sure you want to revove this category?")) {
+        await $api('quiz/delete', {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${session!}`
+            },
+            body: {quizId}
+        })
 
-    refreshQuizzes()
+        refreshQuizzes()
+    }
+
+    
 }
 
 const filteredQuizzes = computed(() => {
@@ -105,6 +113,12 @@ const filteredQuizzes = computed(() => {
 
 const navigateToQuiz = async (id: string) => {
     navigateTo(`/quiz/${id}`)
+}
+
+const haveQuestions =  (questions: number) => {
+    if (questions > 0) return false
+
+    return true
 }
 
 watchEffect(() => {
