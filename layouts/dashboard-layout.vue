@@ -1,6 +1,6 @@
 <template>
     <div class="lg:w-1/2 xl:w-1/3 mx-auto">
-        <NavBar :pageName="pageName" :username="user?.userName" :items="items"></NavBar>
+        <NavBar :pageName="pageName" :username="user!.userName" :items="items"></NavBar>
         <div class="p-3">
             <slot />
         </div>
@@ -14,7 +14,8 @@ const router = useRouter()
 const {getSession, unsetSession} = useSession()
 const session = getSession()
 
-const pageName = ref(router.currentRoute.value.name)
+const pageNames = router.currentRoute.value.name!.toString().split('-')
+const pageName = pageNames[pageNames.length - 1]
 
 const {data: user} = await useAPI<User>('users/profile', {
     headers: {

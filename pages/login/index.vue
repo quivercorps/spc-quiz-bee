@@ -10,7 +10,7 @@
                     <UInput type="password" v-model="loginState.password"></UInput>
                 </UFormGroup>
 
-                <UButton type="submit">Submit</UButton>
+                <UButton type="submit" :loading="isLoading">Submit</UButton>
             </UForm>
         </div>
     </div>
@@ -18,11 +18,11 @@
 </template>
 
 <script setup lang="ts">
-
 const { $api } = useNuxtApp()
-const router = useRouter()
-const {unsetSession, setSession, getSession} = useSession()
+const {setSession, getSession} = useSession()
 const session = getSession()
+
+const isLoading = ref(false)
 
 const loginState = reactive({
     email: "",
@@ -31,10 +31,13 @@ const loginState = reactive({
 
 const loginUser = async () => {
     try {
+        isLoading.value = true
         const result: {access_token: string} = await $api('auth/login', {
             method: 'POST',
-            body: loginState
+            body: loginState,
+            withCredentials: true
         })
+        isLoading.value = false
         setSession(result.access_token)
         await navigateTo('/dashboard/')
     } catch (error) {

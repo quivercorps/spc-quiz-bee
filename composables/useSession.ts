@@ -1,5 +1,5 @@
 export const useSession = () => {
-    const session = useCookie<string | null>('session', {maxAge: 18000})
+    const session = useCookie<string | null>('session', { maxAge: 18000})
 
     const setSession = (access_token: string) => {
         session.value = access_token
