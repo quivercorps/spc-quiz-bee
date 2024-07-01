@@ -38,7 +38,7 @@
                 {{ item.label }}
               </template>
               <template #questions="{item}">
-                <div class="mb-3" v-for="question in categorizedQuestions[category.id]">
+                <div class="mb-3" v-for="question in categorizedQuestions[category._id]">
                   <QuestionCard 
                   :question="question" 
                   :index="index" 
@@ -51,10 +51,11 @@
               <template #options="{item}">
                 <div>
                   <div class="flex items-center gap-5">
-                    <p>Category Name</p>
                     <ChangeNameInput 
                       :name="category.name" 
-                      :index="category.id" 
+                      :index="category.id"
+                      :timer="category.defaultTimer"
+                      :score="category.defaultScore"
                       placeholder="Enter Category Name..." 
                       @change-category-name="changeCategoryName" 
                       ></ChangeNameInput>
@@ -153,17 +154,20 @@ const categorizedQuestions = computed<Record<string, Question[]>>(() => {
   // Initialize each category with an empty array
   const result: Record<string, Question[]> = {}
   quiz.value.categories.forEach(category => {
-    result[category.id] = []
+    result[category._id] = []
   })
 
   // Populate with actual questions
   quiz.value.questions.forEach(question => {
-    if (result[question.category.id]) {
-      result[question.category.id].push(question)
+    console.log(question.category)
+    if (result[question.category]) {
+      result[question.category].push(question)
     } else {
-      result[question.category.id] = [question]
+      result[question.category] = [question]
     }
   })
+
+  console.log(result)
 
   return result
 })
@@ -219,7 +223,8 @@ async function addQuestion(category: Category) {
     quizId: quiz.value?._id,
     questionType: QuestionType.MultipleChoice,
     category: category,
-    timer: "0",
+    timer: category.defaultTimer,
+    score: category.defaultScore,
     text: "Are you making a quiz?",
     choices: [
       {
@@ -246,7 +251,7 @@ async function addQuestion(category: Category) {
   
 }
 
-async function changeCategoryName(categoryName: string, index: number) {
+async function changeCategoryName(categoryName: string, score: number, timer: number, index: number) {
   await $api('quiz/update/category/name', {
       method: 'PATCH',
       headers: {
@@ -255,6 +260,8 @@ async function changeCategoryName(categoryName: string, index: number) {
       body: {
         quizId: quiz.value?._id,
         categoryName: categoryName,
+        defaultTimer: timer,
+        defaultScore: score,
         categoryId: index 
       }
     })

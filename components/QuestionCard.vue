@@ -2,7 +2,7 @@
     <UCard>
         <template #header>
             <div class="flex gap-1">
-              <UInput @change="$emit('update-questions', question, index)" color="gray" class="flex-1" size="lg" v-model="question.text" placeholder="Enter A Question..." />
+              <UTextarea autoresize :rows="1" @change="$emit('update-questions', question, index)" color="gray" class="flex-1" size="lg" v-model="question.text" placeholder="Enter A Question..." />
               <UButton @click="$emit('delete-question', question)" color="red" class="mb-1" variant="ghost" icon="i-heroicons-trash"></UButton>
             </div>     
         </template>

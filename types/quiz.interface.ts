@@ -18,14 +18,17 @@ export interface Choice {
 }
 
 export interface Category {
+    _id: number;
     id: number;
     name: string;
+    defaultTimer: number;
+    defaultScore: number;
 }
 
 export interface Question {
     _id: string;
     questionType: QuestionType;
-    category: Category;
+    category: string;
     timer: number;
     text: string;
     choices?: Choice[];

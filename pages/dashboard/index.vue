@@ -10,7 +10,7 @@
         <UButton @click="createQuiz" label="Create New Quiz" :loading="isLoading"></UButton>
     </div>
     <div v-if="!pendingQuizzes" class="flex flex-col gap-3 mt-5">
-        
+        <!-- <UButton v-if="session" @click="createLobby">Create Lobby</UButton> -->
         <div class="flex flex-col items-center" v-if="filteredQuizzes?.length == 0">
             <p>No Results...</p>
         </div>
