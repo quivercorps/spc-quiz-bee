@@ -32,7 +32,7 @@
                     <p>Categories: {{ quiz.categories?.length || 0 }}</p>
                     <p>Questions: {{ quiz.questions?.length || 0 }}</p>
                 </div>
-                <UButton size="xl" icon="i-heroicons-puzzle-piece" trailing :disabled="haveQuestions(quiz.questions!.length)">Start Quiz</UButton>
+                <UButton @click="startLobby(quiz._id)" size="xl" icon="i-heroicons-puzzle-piece" trailing :disabled="haveQuestions(quiz.questions!.length)">Start Quiz</UButton>
             </div>
         </UCard>
     </div>
@@ -96,7 +96,6 @@ const deleteQuiz = async (quizId: string) => {
         refreshQuizzes()
     }
 
-    
 }
 
 const filteredQuizzes = computed(() => {
@@ -119,6 +118,18 @@ const haveQuestions =  (questions: number) => {
     if (questions > 0) return false
 
     return true
+}
+
+const startLobby = async (quiz: string) => {
+    const lobby = await $api('lobby/create', {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${session!}`
+        },
+        body: {quiz}
+    })
+
+    navigateTo(`/lobby/${lobby}`)
 }
 
 watchEffect(() => {

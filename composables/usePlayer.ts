@@ -1,27 +1,21 @@
-export const setPlayer = ({ id, name }: { id: string; name: string }) => {
-  const player = useCookie<{playerId: string; playerName: string} | null>('player', {maxAge: 3000})
+import type { Player } from "~/types/chat.interface";
 
-  player.value = {
-      playerId: id,
-      playerName: name
-  }
+export const setPlayer = (player: Player) => {
+  const cookie = useCookie<Player | null>('player', {maxAge: 3000})
+
+  cookie.value = player
 }
 
 export const unsetPlayer = () => {
-  const player = useCookie<{playerId: string; playerName: string} | null>('player')
+  const player = useCookie<Player | null>('player')
 
   player.value = null
 }
 
 export const getPlayer = () => {
-  const player = useCookie<{playerId: string; playerName: string} | null>('player')
+  const player = useCookie<Player | null>('player')
   
-  const playerId = player.value?.playerId
-  const playerName = player.value?.playerName
-  return {
-    playerId,
-    playerName,
-  }
+  return player
 }
 
 export const generatePlayerId = (playerName: string) => {

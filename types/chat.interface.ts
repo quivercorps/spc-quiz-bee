@@ -1,3 +1,5 @@
+import type { Quiz } from "./quiz.interface";
+
 export interface User {
     email: string;
     id: string;
@@ -5,20 +7,27 @@ export interface User {
 }
 
 export interface Player {
-    playerId: string;
-    playerName: string;
-    socketId: string;
+    _id: string;
+    name: string;
+    score: number;
+    answer?: string;
 }
 export interface PlayerCookie {
     playerId: string;
     playerName: string;
 }
 export interface Lobby {
-    lobbyId?: string;
-    name: string;
-    host: Player;
-    inviteCode?: string;
-    players: Player[];
+    _id: string;
+    code: string;
+    host: string;
+    quiz: Quiz;
+    lobbyStatus: string;
+    players: Player[]
+}
+
+export interface FindLobby {
+    player: Player;
+    lobbyId: string;
 }
 
 export interface Message {

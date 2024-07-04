@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Lobby, User } from '~/types/chat.interface'
+import type { FindLobby, Lobby, Player, User } from '~/types/chat.interface'
 
 const { $api } = useNuxtApp()
 const { socket } = useSocket()
@@ -47,8 +47,7 @@ const router = useRouter()
 const {unsetSession, setSession, getSession} = useSession()
 
 const session = getSession()
-const player = getPlayer()
-const currentLobby = useCookie<string>('lobby')
+const currentLobby = useCookie<string | undefined>('lobby')
 
 const joinLobbySelection = ref('')
 const isLoading = ref(true)
@@ -111,34 +110,39 @@ const getProfile = async () => {
 //     socket.off('lobbies_updated')
 // })
 
-const createLobby = async () => {
-    const newPlayer = {
-        playerId: generatePlayerId('Admin'),
-        playerName: 'Admin'
-    }
-    setPlayer({id: newPlayer.playerId, name: newPlayer.playerName})
+// const createLobby = async () => {
+//     const newPlayer = {
+//         playerId: generatePlayerId('Admin'),
+//         playerName: 'Admin'
+//     }
+//     setPlayer({id: newPlayer.playerId, name: newPlayer.playerName})
 
-    const inviteCode = await $api<string>('lobby/generate_invite')
-    await navigateTo(`/lobby/${inviteCode}`)
-}
+//     const inviteCode = await $api<string>('lobby/generate_invite')
+//     await navigateTo(`/lobby/${inviteCode}`)
+// }
 
 const join = async ({ playerName, inviteCode }: { playerName: string; inviteCode: string }) => {
-    const newPlayer = {
-        playerId: generatePlayerId(playerName),
-        playerName: playerName
-    }
+    unsetPlayer()
+    currentLobby.value = undefined
 
-    setPlayer({id: newPlayer.playerId, name: newPlayer.playerName})
+    const res: FindLobby = await $api('lobby/join', {
+        method: 'POST',
+        body: {
+            name: playerName,
+            code: inviteCode
+        }
+    })
 
-    const lobby = inviteCode
-    currentLobby.value = lobby
+    currentLobby.value = res.lobbyId
 
-    await navigateTo(`/lobby/${lobby}`)
+    setPlayer(res.player)
+
+    navigateTo(`/lobby/${inviteCode}`)
 }
 
-const goToQuizzes = async () => {
-    await navigateTo(`/quiz/list`)
-}
+// const goToQuizzes = async () => {
+//     await navigateTo(`/quiz/list`)
+// }
 
 // watchEffect(() => {
 //     if (player?.playerId && currentLobby.value) {
