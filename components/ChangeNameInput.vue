@@ -21,6 +21,10 @@
 <script setup lang="ts">
 
 const props = defineProps({
+    _id: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -96,6 +100,6 @@ function changeName() {
         return
     }
 
-    emit('change-category-name', editableName.value, editableScore.value, editableTimer.value, props.index)
+    emit('change-category-name', props._id, editableName.value, editableScore.value, editableTimer.value, props.index)
 }
 </script>

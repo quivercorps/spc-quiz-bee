@@ -1,4 +1,4 @@
-import type { Quiz } from "./quiz.interface";
+import type { Category, Question, Quiz } from "./quiz.interface";
 
 export interface User {
     email: string;
@@ -21,8 +21,17 @@ export interface Lobby {
     code: string;
     host: string;
     quiz: Quiz;
+    categorizedQuestions: CategorizedQuesiton[];
+    timer: number;
+    categoryIndex: number;
+    questionIndex: number;
     lobbyStatus: string;
     players: Player[]
+}
+
+export interface CategorizedQuesiton {
+    category: Category
+    questions?: Question[]
 }
 
 export interface FindLobby {

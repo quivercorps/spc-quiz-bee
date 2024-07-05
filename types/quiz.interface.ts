@@ -28,7 +28,7 @@ export interface Category {
 export interface Question {
     _id: string;
     questionType: QuestionType;
-    category: string;
+    category: Category;
     timer: number;
     text: string;
     choices?: Choice[];

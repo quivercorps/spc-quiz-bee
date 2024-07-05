@@ -52,6 +52,7 @@
                 <div>
                   <div class="flex items-center gap-5">
                     <ChangeNameInput 
+                      :_id="category._id"
                       :name="category.name" 
                       :index="category.id"
                       :timer="category.defaultTimer"
@@ -159,11 +160,11 @@ const categorizedQuestions = computed<Record<string, Question[]>>(() => {
 
   // Populate with actual questions
   quiz.value.questions.forEach(question => {
-    console.log(question.category)
-    if (result[question.category]) {
-      result[question.category].push(question)
+    console.log(question.category.name)
+    if (result[question.category._id]) {
+      result[question.category._id].push(question)
     } else {
-      result[question.category] = [question]
+      result[question.category._id] = [question]
     }
   })
 
@@ -226,17 +227,9 @@ async function addQuestion(category: Category) {
     timer: category.defaultTimer,
     score: category.defaultScore,
     text: "Are you making a quiz?",
-    choices: [
-      {
-        text: 'Yes',
-        isCorrect: true
-      },
-      {
-        text: 'No',
-        isCorrect: false
-      }
-    ]
   }
+
+  console.log(newQuestion)
 
   await $api('quiz/create_question', {
     method: 'PATCH',
@@ -251,7 +244,7 @@ async function addQuestion(category: Category) {
   
 }
 
-async function changeCategoryName(categoryName: string, score: number, timer: number, index: number) {
+async function changeCategoryName(_id: string, categoryName: string, score: number, timer: number, index: number) {
   await $api('quiz/update/category/name', {
       method: 'PATCH',
       headers: {
@@ -259,6 +252,7 @@ async function changeCategoryName(categoryName: string, score: number, timer: nu
       },
       body: {
         quizId: quiz.value?._id,
+        category_Id: _id,
         categoryName: categoryName,
         defaultTimer: timer,
         defaultScore: score,
@@ -307,7 +301,6 @@ async function updateQuestions(question: Question, index: number) {
 }
 
 async function deleteQuestion(question: Question) {
-  console.log("hello?")
   if (window.confirm("Are you sure you want to revove this category?")) {
     await $api('quiz/delete/question', {
       method: 'DELETE',
