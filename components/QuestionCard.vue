@@ -70,7 +70,8 @@ function deleteChoice(choice: Choice, index: number) {
   }
 
   question.value.choices = newChoices?.splice(0)
-  updateCorrectChoice(idOfNextChoice!)
+  // updateCorrectChoice(idOfNextChoice!)
+  emit('delete-choice', choice._id, question.value._id)
 }
 
 function updateCorrectChoice(id: string) {

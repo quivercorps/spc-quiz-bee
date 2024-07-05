@@ -44,7 +44,8 @@
                   :index="index" 
                   @update-questions="updateQuestions"
                   @delete-question="deleteQuestion"
-                  @create-choice="createChoice"></QuestionCard>
+                  @create-choice="createChoice"
+                  @delete-choice="deleteChoice"></QuestionCard>
                 </div>
                 <div @click="addQuestion(category)" class="add-button">Add Question</div>
               </template>
@@ -121,6 +122,13 @@ const {data: user} = await useAPI<User>('users/profile', {
         Authorization: `Bearer ${session!}`
     }
 })
+
+if (!user.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found'
+  })
+}
 
 const {data: quiz,  refresh: quizRefresh} = await useAPI<Quiz>(`quiz/${route.params.quizId}`, {
   headers: {
@@ -214,6 +222,23 @@ async function createChoice(questionId: string) {
       Authorization: `Bearer ${session}`
     },
     body: newChoice
+  })
+
+  quizRefresh()
+}
+
+async function deleteChoice(choiceId: string, questionId: string) {
+  const deleteChoice = {
+    quizId: quiz.value?._id,
+    questionId,
+    choiceId
+  }
+  await $api('quiz/delete/choice', {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${session}`
+    },
+    body: deleteChoice
   })
 
   quizRefresh()
