@@ -2,6 +2,7 @@
     <div class="bg-white dark:bg-transparent p-3 flex justify-between items-center border-b dark:border-gray-500">
         <div class="flex items-center gap-2">
             <UButton v-if="isBackToDashboard" @click="navigateTo('/dashboard')" variant="ghost" icon="i-heroicons-arrow-uturn-left"></UButton>
+            <UButton v-else @click="navigateTo('/')" variant="ghost" icon="i-heroicons-home"></UButton>
             
             <div @click="enableEdit" v-if="!isEditting" :class="!isEdit ? '' : 'cursor-pointer'" class="flex items-center gap-2">
                 <p class="capitalize select-none">{{ pageName }}</p>

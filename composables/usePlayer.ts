@@ -1,7 +1,7 @@
 import type { Player } from "~/types/chat.interface";
 
 export const setPlayer = (player: Player) => {
-  const cookie = useCookie<Player | null>('player', {maxAge: 3000})
+  const cookie = useCookie<Player | null>('player', {maxAge: 30000})
 
   cookie.value = player
 }

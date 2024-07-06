@@ -2,7 +2,7 @@
     <div>
         <div class="fixed w-full bottom-0 pb-6 pt-3 bg-white dark:bg-[#121212]">
             <div class="flex justify-center gap-3">
-                <UButton @click="startGame" v-if="isHost" size="xl" :disabled="lobby?.players.length == 0">Start Game</UButton>
+                <UButton @click="startGame" v-if="isHost && lobby?.lobbyStatus === 'waiting'" size="xl" :disabled="lobby?.players.length == 0">Start Game</UButton>
                 <UButton @click="deleteLobby" v-if="isHost" color="red" size="xl">Close Lobby</UButton>
                 <UButton @click="kickPlayer(player?._id!, player?.name!)" v-else color="red" size="xl">Leave Lobby</UButton>
             </div>
@@ -64,6 +64,14 @@ const {data: user} = await useAPI<User>('users/profile', {
     }
 })
 
+const kickPlayer = (playerId: string, playerName: string) => {
+    socket.emit('kick_player', {
+        lobbyId: lobby.value?._id,
+        playerId,
+        playerName
+    })
+}
+
 if (user.value?.id == lobby.value?.host) {
     isHost.value = true
 }
@@ -80,7 +88,12 @@ socket.on('player_joined', (newPlayer: Player) => {
 socket.on('game_started', () => {
     refreshLobby()
     if (isHost.value) {
-        console.log("leaderboard!")
+        navigateTo(`/game/${lobbyCode}/leaderboard`, {
+            external: true,
+            open: {
+                target: "_blank"
+            }
+        })
     } else {
         socket.disconnect()
         navigateTo(`/game/${lobbyCode}`)
@@ -92,11 +105,10 @@ socket.on('player_kicked', (playerId: string, playerName: string) => {
     if (playerId == player.value?._id) {
         unsetPlayer()
         currentLobby.value = undefined
+        socket.disconnect()
 
         console.log('You have been removed from the lobby.')
         navigateTo('/')
-
-        socket.disconnect()
     } else {
         console.log(`${playerName} has been removed from the lobby.`)
     }
@@ -107,14 +119,13 @@ socket.on('player_kicked', (playerId: string, playerName: string) => {
 socket.on('kick_all', () => {
     unsetPlayer()
     currentLobby.value = undefined
+    socket.disconnect()
 
     if (isHost.value) {
         navigateTo('/login')
     } else {
         navigateTo('/')
     }
-
-    socket.disconnect()
 })
 
 if (isHost.value) {
@@ -127,8 +138,7 @@ if (isHost.value) {
 } else {
     if (player.value != null) {
         if (lobby.value?.lobbyStatus != "waiting") {
-            navigateTo('/')
-            socket.disconnect()
+            kickPlayer(player.value._id, player.value.name)
         }
 
         socket.on('connect', () => {
@@ -149,13 +159,18 @@ if (isHost.value) {
     }
 }
 
-const kickPlayer = (playerId: string, playerName: string) => {
-    socket.emit('kick_player', {
-        lobbyId: lobby.value?._id,
-        playerId,
-        playerName
-    })
-}
+socket.on('end_game', async () => {
+    unsetPlayer()
+    currentLobby.value = undefined
+    socket.disconnect()
+
+    if (isHost.value) {
+        await navigateTo(`/dashboard`)
+    } else {
+        await navigateTo(`/game/${lobbyCode}/leaderboard`)
+    }
+    
+})
 
 const deleteLobby = () => {
     socket.emit('delete_lobby', {
@@ -181,6 +196,7 @@ onUnmounted(() => {
     socket.off('host_joined')
     socket.off('kick_all')
     socket.off('game_started')
+    socket.off('end_game')
 })
 
 

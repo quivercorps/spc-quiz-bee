@@ -24,6 +24,7 @@ const {data: user} = await useAPI<User>('users/profile', {
 })
 
 if (!user.value) {
+    
   throw createError({
     statusCode: 404,
     statusMessage: 'Page Not Found'

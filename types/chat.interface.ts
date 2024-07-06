@@ -22,6 +22,7 @@ export interface Lobby {
     host: string;
     quiz: Quiz;
     categorizedQuestions: CategorizedQuesiton[];
+    hasTimer: boolean;
     timer: number;
     categoryIndex: number;
     questionIndex: number;

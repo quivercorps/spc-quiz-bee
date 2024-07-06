@@ -29,11 +29,12 @@
     </div>
     <UButton v-if="session" @click="createLobby">Create Lobby</UButton> -->
     <div class="flex h-screen">
-        <div class="m-auto">
-            <JoinForm 
-                @join="join">
-
-            </JoinForm>
+        <div class="m-auto flex flex-col gap-2">
+            <UButton @click="navigateTo('/dashboard')" v-if="user" icon="i-heroicons-adjustments-vertical">Go to Dashboard</UButton>
+            <JoinForm
+                v-else
+                @join="join"/>
+            <UButton @click="navigateTo('/leaderboards')"  variant="outline" color="emerald" icon="i-heroicons-list-bullet">Leaderboards</UButton>
         </div>
     </div>
 </template>
@@ -52,6 +53,12 @@ const currentLobby = useCookie<string | undefined>('lobby')
 const joinLobbySelection = ref('')
 const isLoading = ref(true)
 const lobbies = ref<Lobby[]>([])
+
+const {data: user} = await useAPI<User>('users/profile', {
+    headers: {
+        Authorization: `Bearer ${session!}`
+    }
+})
 
 const loginState = reactive({
     email: "",
