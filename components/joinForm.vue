@@ -16,6 +16,8 @@
 
 const currentLobby = useCookie<string | undefined>('lobby')
 
+const route = useRoute()
+
 const state = reactive({
     playerName: "",
     inviteCode: "",
@@ -28,5 +30,11 @@ const join = () => {
     inviteCode: state.inviteCode,
   })
 }
+
+onMounted(() => {
+    if (route.query.invite) {
+        state.inviteCode = route.query.invite as string
+    }
+})
 
 </script>

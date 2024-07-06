@@ -13,6 +13,7 @@
     "@nuxt/ui": "^2.14.2",
     "@pinia/nuxt": "^0.5.1",
     "nuxt": "^3.10.3",
+    "qr-code-generator-vue3": "^1.4.21",
     "socket.io-client": "^4.7.5",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",

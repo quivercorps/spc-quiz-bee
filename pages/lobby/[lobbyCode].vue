@@ -2,9 +2,11 @@
     <div>
         <div class="fixed w-full bottom-0 pb-6 pt-3 bg-white dark:bg-[#121212]">
             <div class="flex justify-center gap-3">
-                <UButton @click="startGame" v-if="isHost && lobby?.lobbyStatus === 'waiting'" size="xl" :disabled="lobby?.players.length == 0">Start Game</UButton>
+                <UButton @click="startGame" v-if="isHost && lobby?.lobbyStatus === 'waiting'" size="xl"
+                    :disabled="lobby?.players.length == 0">Start Game</UButton>
                 <UButton @click="deleteLobby" v-if="isHost" color="red" size="xl">Close Lobby</UButton>
-                <UButton @click="kickPlayer(player?._id!, player?.name!)" v-else color="red" size="xl">Leave Lobby</UButton>
+                <UButton @click="kickPlayer(player?._id!, player?.name!)" v-else color="red" size="xl">Leave Lobby
+                </UButton>
             </div>
         </div>
         <div class="py-5 px-3 lg:px-0 lg:w-1/2 lg:mx-auto">
@@ -17,6 +19,11 @@
                 <template #footer>
                     <p class="text-center text-gray-500 dark:text-gray-400">Invite Code</p>
                     <p class="text-xl tracking-widest text-center font-semibold">{{ lobby?.code }}</p>
+                    <p class="text-center flex justify-center mt-5">
+                        <ClientOnly fallback-tag="span" fallback="Generating QR...">
+                            <component :is="QRCodeVue3" :value="lobby?.code" />
+                        </ClientOnly>
+                    </p>
                 </template>
             </UCard>
             <div v-if="lobby?.players.length! > 0">
@@ -26,16 +33,17 @@
                         <div class="text-gray-500 dark:text-gray-400">
                             <p class="text-xl text-center">{{ p.name }}</p>
                         </div>
-                        
+
                         <template #footer v-if="isHost">
                             <div class="flex justify-center">
-                                <UButton @click="kickPlayer(p._id, p.name)" variant="ghost" color="red">Kick Player</UButton>
+                                <UButton @click="kickPlayer(p._id, p.name)" variant="ghost" color="red">Kick Player
+                                </UButton>
                             </div>
                         </template>
                     </UCard>
                 </div>
             </div>
-            
+
             <div class="flex flex-col h-[300px] justify-center items-center" v-else>
                 <p>No Players...</p>
             </div>
@@ -44,10 +52,12 @@
 </template>
 
 <script lang="ts" setup>
+
 import type { Lobby, Player, User } from '~/types/chat.interface';
 
+const QRCodeVue3 = ref(null);
 const { $api } = useNuxtApp()
-const {getSession, unsetSession} = useSession()
+const { getSession, unsetSession } = useSession()
 const { socket } = useSocket()
 const player = getPlayer()
 const session = getSession()
@@ -57,8 +67,8 @@ const currentLobby = useCookie<string | undefined>('lobby')
 const lobbyCode = route.params.lobbyCode
 const isHost = ref(false)
 
-const {data: lobby, refresh: refreshLobby}= await useAPI<Lobby>(`lobby/find/${lobbyCode}`)
-const {data: user} = await useAPI<User>('users/profile', {
+const { data: lobby, refresh: refreshLobby } = await useAPI<Lobby>(`lobby/find/${lobbyCode}`)
+const { data: user } = await useAPI<User>('users/profile', {
     headers: {
         Authorization: `Bearer ${session!}`
     }
@@ -169,7 +179,7 @@ socket.on('end_game', async () => {
     } else {
         await navigateTo(`/game/${lobbyCode}/leaderboard`)
     }
-    
+
 })
 
 const deleteLobby = () => {
@@ -188,6 +198,9 @@ const startGame = () => {
 
 onMounted(() => {
     socket.connect()
+
+    // @ts-expect-error non-typed component
+    QRCodeVue3.value = defineAsyncComponent(() => import('~/components/qrcode.vue'));
 })
 
 onUnmounted(() => {

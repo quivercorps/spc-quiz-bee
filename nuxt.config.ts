@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      baseURL: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/'
+      baseURL: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/',
+      appUrl: process.env.NUXT_PUBLIC_URL || 'http://localhost:3000/'
     }
   },
   colorMode: {

@@ -1,33 +1,4 @@
 <template>
-    <!-- <div>
-        <UButton v-if="session" @click="goToQuizzes">My Quizzes</UButton>
-        <UButton v-if="session" @click="getProfile">go to profile</UButton>
-        <UButton v-if="session" @click="logout">logout</UButton>
-        <div v-if="!session">
-            LOGIN FORM
-            <UForm :state="loginState" @submit="loginUser">
-                <UFormGroup label="Name" name="userName">
-                    <UInput v-model="loginState.email"></UInput>
-                </UFormGroup>
-                
-                <UFormGroup label="Password" name="lobbyName">
-                    <UInput type="password" v-model="loginState.password"></UInput>
-                </UFormGroup>
-
-                <UButton type="submit">Submit</UButton>
-            </UForm>
-        </div>
-    </div>
-    <div class="flex flex-col gap-3 lg:flex-row lg:justify-between">
-        <LobbySelector 
-            :lobbies="lobbies ?? []"
-            :selectedLobby="joinLobbySelection"
-            :isLoading="isLoading"
-            @select-lobby="joinLobbySelection = $event"
-        ></LobbySelector>
-        <LoginForm class="flex-1" :defaultPlayer="player.playerName" :disableNewLobby="joinLobbySelection !== ''" @login="login"></LoginForm>
-    </div>
-    <UButton v-if="session" @click="createLobby">Create Lobby</UButton> -->
     <div class="flex h-screen">
         <div class="m-auto flex flex-col gap-2">
             <UButton @click="navigateTo('/dashboard')" v-if="user" icon="i-heroicons-adjustments-vertical">Go to Dashboard</UButton>
