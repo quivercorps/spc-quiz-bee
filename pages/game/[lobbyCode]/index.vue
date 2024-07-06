@@ -8,7 +8,6 @@
             <p class="text-lg">{{ lobby?.categorizedQuestions[lobby.categoryIndex].questions![lobby.questionIndex].text }}</p>
             <p class="text-sm text-gray-500 dark:border-slate-500">{{ lobby?.categorizedQuestions[lobby.categoryIndex].category.name }}</p>
         </div>
-        {{ selectedAns }}
         <div class="grid gap-3 grid-cols-1 mt-5" 
             :class="
                 lobby?.categorizedQuestions[lobby.categoryIndex].questions![lobby.questionIndex].choices?.length! % 2 === 0 ?
